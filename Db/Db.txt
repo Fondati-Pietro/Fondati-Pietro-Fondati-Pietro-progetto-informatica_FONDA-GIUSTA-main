@@ -1,0 +1,122 @@
+DROP DATABASE IF EXISTS negozio_online;
+CREATE DATABASE IF NOT EXISTS negozio_online;
+USE negozio_online;
+
+-- Tabelle rimaste invariate (categorie, prodotti, immagini_prodotti, saldo, ordini, dettagli_ordine, prodotti_temp)
+CREATE TABLE categorie (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE prodotti (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    nome VARCHAR(255) NOT NULL,
+    descrizione TEXT,
+    prezzo DECIMAL(10, 2) NOT NULL,
+    quantita_disponibile INT DEFAULT 0,
+    categoria_id INT,
+    data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoria_id) REFERENCES categorie(id)
+);
+
+CREATE TABLE immagini_prodotti (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    prodotto_id INT,
+    immagine_url VARCHAR(255),
+    immagine_data LONGBLOB,
+    tipo VARCHAR(50),
+    FOREIGN KEY (prodotto_id) REFERENCES prodotti(id)
+);
+
+-- Tabella utenti MODIFICATA: password_hash → password (testo in chiaro)
+CREATE TABLE utenti (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nomeUtente VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,  -- Ora memorizzata in chiaro
+    ruolo ENUM('cliente', 'amministratore') DEFAULT 'cliente'
+);
+
+-- Resto delle tabelle (invariate)
+CREATE TABLE saldo (
+    id INT PRIMARY KEY,
+    saldo DECIMAL(10, 2) DEFAULT 0.00,
+    FOREIGN KEY (id) REFERENCES utenti(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE ordini (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    utente_id INT,
+    data_ordine TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    quantita INT NOT NULL DEFAULT 1,
+    totale DECIMAL(10, 2),
+    FOREIGN KEY (utente_id) REFERENCES utenti(id)
+);
+
+CREATE TABLE dettagli_ordine (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ordine_id INT,
+    prodotto_id INT,
+    quantita INT,
+    prezzo DECIMAL(10, 2),
+    FOREIGN KEY (ordine_id) REFERENCES ordini(id),
+    FOREIGN KEY (prodotto_id) REFERENCES prodotti(id)
+);
+
+CREATE TABLE prodotti_temp (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    nome VARCHAR(255) NOT NULL,
+    descrizione TEXT,
+    prezzo DECIMAL(10, 2) NOT NULL,
+    quantita_disponibile INT DEFAULT 0,
+    categoria_id INT,
+    immagine_url VARCHAR(255),
+    data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoria_id) REFERENCES categorie(id)
+);
+
+-- Dati iniziali (modificati per usare password in chiaro)
+INSERT INTO categorie (nome) VALUES
+('Elettronica'),
+('Abbigliamento'),
+('Accessori'),
+('Casa e cucina');
+
+INSERT INTO prodotti (nome, descrizione, prezzo, quantita_disponibile, categoria_id) VALUES
+('Smartphone XYZ', 'Uno smartphone con fotocamera da 48MP e display da 6.5 pollici', 299.99, 25, 1),
+('Cuffie Wireless', 'Cuffie Bluetooth con riduzione del rumore attivo', 129.99, 50, 1),
+('T-shirt Uomo', 'T-shirt in cotone, taglia M, colore blu', 19.99, 100, 2),
+('Giacca Invernale', 'Giacca da uomo invernale, impermeabile, taglia L', 89.99, 30, 2),
+('Lampada da Tavolo', 'Lampada da tavolo con regolazione dell\'intensità luminosa', 45.50, 10, 4),
+('Tostapane', 'Tostapane con 4 fessure e funzioni extra', 59.99, 15, 4);
+
+INSERT INTO immagini_prodotti (prodotto_id, immagine_url) VALUES
+(1, './images/roba.jpg'),
+(2, './images/download.jpg'),
+(3, './images/PNG_transparency_demonstration_1.jpg'),
+(4, './images/roba.jpg'),
+(5, './images/roba.jpg'),
+(6, './images/roba.jpg');
+
+-- Password ora in chiaro (es: "admin123" invece dell'hash)
+INSERT INTO utenti (nomeUtente, password, ruolo) VALUES
+('Giovanni', 'password123', 'cliente'),       -- Password: password123
+('Luigi', 'qwerty', 'cliente'),              -- Password: qwerty
+('Mario', 'admin123', 'amministratore');     -- Password: admin123
+
+INSERT INTO saldo (id, saldo) VALUES
+(1, 0), 
+(2, 0),   
+(3, 0); 
+
+INSERT INTO ordini (utente_id, totale, quantita) VALUES
+(1, 399.98, 2),  -- Giovanni
+(2, 129.99, 1),  -- Luigi
+(3, 135.49, 3);  -- Mario
+
+INSERT INTO dettagli_ordine (ordine_id, prodotto_id, quantita, prezzo) VALUES
+(1, 1, 1, 299.99),
+(1, 2, 1, 129.99),
+(2, 2, 1, 129.99),
+(3, 3, 2, 19.99),
+(3, 6, 1, 59.99);
