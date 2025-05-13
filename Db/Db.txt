@@ -94,9 +94,9 @@ INSERT INTO immagini_prodotti (prodotto_id, immagine_url) VALUES
 (1, './images/roba.jpg'),
 (2, './images/download.jpg'),
 (3, './images/PNG_transparency_demonstration_1.jpg'),
-(4, './images/roba.jpg'),
-(5, './images/roba.jpg'),
-(6, './images/roba.jpg');
+(4, './images/giacca_invernale.jpg'),
+(5, './images/lampada.jpg'),
+(6, './images/tostapane.jpg');
 
 -- Password ora in chiaro (es: "admin123" invece dell'hash)
 INSERT INTO utenti (nomeUtente, password, ruolo) VALUES

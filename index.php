@@ -23,7 +23,7 @@
             </div>
 
             <div class="d-flex justify-content-center mt-4 flex-wrap">
-                <a href="login.php" class="btn btn-primary mx-2 my-1">Accedi</a>
+                <a href="login.php" class="btn btn-success mx-2 my-1">Accedi</a>
                 <a href="register.php" class="btn btn-success mx-2 my-1">Registrati</a>
             </div>
         </div>
