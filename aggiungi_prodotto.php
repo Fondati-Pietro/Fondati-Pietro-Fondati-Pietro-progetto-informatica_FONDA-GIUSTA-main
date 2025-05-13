@@ -185,7 +185,7 @@ session_start();
                 if (!empty($categorie) && !empty($immagine_path)) {
                     $success_count = 0;
                     
-                    // Se admin, inserimento diretto
+                    // Se admin -> inserimento diretto
                     if ($_SESSION['user']['ruolo'] === 'amministratore') {
                         foreach ($categorie as $cat_id) {
                             $cat_id = intval($cat_id);

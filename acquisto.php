@@ -17,10 +17,7 @@ $carrello = $_SESSION['carrello'] ?? [];
     <link rel="stylesheet" href="/css/style.css">
     <title>Conferma Acquisto</title>
 </head>
-
 <body>
-
-
     <nav class="navbar navbar-expand-lg bg-black navbar-dark navbar-center">
         <div class="container">
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -34,7 +31,8 @@ $carrello = $_SESSION['carrello'] ?? [];
         </div>
     </nav>
     <?php 
-    $user_id = $_SESSION['user']['id'] ?? null;
+    // Assicurati che l'ID utente sia disponibile se no è assegna null
+    $user_id = $_SESSION['user']['id'] ?? null; 
     $prezzoTot = 0;
 
     // Calcola il totale del carrello
@@ -62,7 +60,7 @@ if ($contoFinale >= 0) {
     $stmt->execute([$contoFinale, $user_id]);
 
     // Inserisci l'ordine nella tabella ordini
-    $quantita_totale = count($carrello); // oppure somma delle quantità se ne prevedi
+    $quantita_totale = count($carrello); // oppure somma delle quantità se ce ne sono
     $stmt = $conn->prepare("INSERT INTO ordini (utente_id, totale, quantita) VALUES (?, ?, ?)");
     $stmt->execute([$user_id, $prezzoTot, $quantita_totale]);
     $ordine_id = $conn->lastInsertId();
@@ -85,11 +83,9 @@ if ($contoFinale >= 0) {
     echo "<center>";
     echo "<div class='alert alert-success'>";
     echo "<h4>Acquisto effettuato con successo!</h4>";
-    echo "<p>Il tuo saldo rimanente è di: <strong>€" . number_format($contoFinale, 2, ',', '.') . "</strong></p>";
+    echo "<p>Il tuo saldo rimanente è di: <strong>€" . number_format($contoFinale, 2, ',', '.') . "</strong></p>"; //saldo rimanente formattato correttamente
     echo "</div>";
     echo "</center>";
-
-    // Optional: header("refresh:3;url=grazie.php");
 } else {
     echo "<center>";
     echo "<div class='alert alert-danger'>";

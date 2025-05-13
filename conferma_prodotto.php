@@ -25,7 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['prodotto_id'])) {
         $prodotto = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($prodotto) {
-            // Avvia transazione per operazioni atomiche
+            // Avvia una transazione nel database.
+            // Blocco di operazioni SQL che vengono eseguite come un’unica unità atomica
+            // Se una di queste operazioni fallisce, tutte le modifiche vengono annullate.
             $conn->beginTransaction();
 
             try {
@@ -43,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['prodotto_id'])) {
                         throw new Exception("Errore nell'inserimento del prodotto");
                     }
 
+                    // Recupera l'ID del prodotto appena inserito
                     $new_id = $conn->lastInsertId();
 
                     // Inserisce l'immagine associata, se presente
@@ -151,6 +154,7 @@ $prodotti_da_approvare = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Funzione per animare la rimozione della card
     document.addEventListener('DOMContentLoaded', function () {
         // Aggiunge evento a ogni form di prodotto
         document.querySelectorAll('.product-form').forEach(form => {

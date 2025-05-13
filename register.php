@@ -221,7 +221,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Indicatore forza password (opzionale)
+        // Indicatore forza password
+        // Modifica il colore della barra in base alla forza della password
         document.getElementById('password').addEventListener('input', function() {
             const password = this.value;
             const strengthBar = document.getElementById('strength-bar');

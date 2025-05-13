@@ -6,7 +6,8 @@ if (!isset($_SESSION['user'])) {
 }
 include 'config.php';
 
-$search = $_GET['search'] ?? '';
+
+$search = $_GET['search'] ?? ''; // Inizializza la variabile di ricerca
 $stmt = $conn->prepare("SELECT prodotti.*, immagini_prodotti.immagine_url FROM prodotti LEFT JOIN immagini_prodotti ON prodotti.id = immagini_prodotti.prodotto_id WHERE prodotti.nome LIKE ?");
 $stmt->execute(["%$search%"]);
 $prodotti = $stmt->fetchAll(PDO::FETCH_ASSOC);
